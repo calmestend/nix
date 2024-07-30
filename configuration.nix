@@ -1,24 +1,16 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, ... }:
+{ config, pkgs, ...}:
 
 {
-	imports =
-		[ # Include the results of the hardware scan.
-		./hardware-configuration.nix
-		];
-
+imports =
+	[ # Include the results of the hardware scan.
+	./hardware-configuration.nix
+	];
 # Bootloader.
-	boot.loader.grub.enable = true;
-	boot.loader.grub.device = "/dev/sda";
-	boot.loader.grub.useOSProber = true;
+boot.loader.grub.enable = true;
+boot.loader.grub.device = "/dev/sda";
+boot.loader.grub.useOSProber = true;
 
-	environment.pathsToLink = [ "/libexec" ];
-
-	networking.hostName = "nixos"; # Define your hostname.
-# networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+networking.hostName = "nixos"; # Define your hostname.
 
 # Configure network proxy if necessary
 # networking.proxy.default = "http://user:password@proxy:port/";
@@ -27,173 +19,151 @@
 # Enable networking
 	networking.networkmanager.enable = true;
 
-# Set your time zone.
-	time.timeZone = "America/Mexico_City";
-
-# Select internationalisation properties.
-	i18n.defaultLocale = "en_US.UTF-8";
+# Enable experimental features
+programs.nix-ld.enable = true;
+nix.settings.experimental-features = [ "nix-command" "flakes"];
 
 # Set fonts
-	fonts.packages = with pkgs; [
-		(nerdfonts.override { fonts = [ "Mononoki" ]; })
-	];
+fonts.packages = with pkgs; [
+	(nerdfonts.override { fonts = [ "Mononoki" ]; })
+];
 
-# Android Setup
-	programs.adb.enable = true;
-	services.udev.packages = [
-		pkgs.android-udev-rules
-	];
 
-# Select zsh as default
-	users.defaultUserShell = pkgs.zsh;
+# Set your time zone.
+time.timeZone = "America/Mexico_City";
 
-# Enable zsh and oh-my-zsh
-
-	programs = {
-		zsh = {
-			enable = true;
-			autosuggestions.enable = true;
-			zsh-autoenv.enable = true;
-			syntaxHighlighting.enable = true;
-
-			shellAliases = {
-				vim = "nvim";
-			};
-
-			ohMyZsh = {
-				enable = true;
-				theme = "robbyrussell";
-				plugins = [
-					"git"
-					"npm"
-				];
-			};
-
-		};
-	};
+# Select internationalisation properties.
+i18n.defaultLocale = "en_US.UTF-8";
 
 # Enable the X11 windowing system.
+services.xserver.enable = true;
 
-# Enable the i3 Window Manager
-	services.displayManager.defaultSession = "none+i3";
-	services.xserver = {
+# Enable SDDM Display Manager
+services.displayManager.sddm.enable = true;
+
+# I Use Sway btw
+programs.sway.enable = true;
+# Configure keymap in X11
+services.xserver.xkb = {
+	layout = "us";
+	variant = "";
+};
+
+# Enable sound with pipewire.
+hardware.pulseaudio.enable = false;
+security.rtkit.enable = true;
+services.pipewire = {
+	enable = true;
+	alsa.enable = true;
+	alsa.support32Bit = true;
+	pulse.enable = true;
+};
+
+# Set zsh as default
+users.defaultUserShell = pkgs.zsh;
+
+# Configure zsh
+programs = {
+	zsh = {
 		enable = true;
-
-		desktopManager = {
-			xterm.enable = false;
-		};
-
-
-		windowManager.i3 = {
+		autosuggestions.enable = true;
+		zsh-autoenv.enable = true;
+		syntaxHighlighting.enable = true;
+		ohMyZsh = {
 			enable = true;
-			extraPackages = with pkgs; [
-				dmenu #application launcher most people use
-					i3status # gives you the default i3 status bar
-					i3lock #default i3 screen locker
-					i3blocks #if you are planning on using i3blocks over i3status
+			theme = "robbyrussell";
+			customPkgs = [
+				pkgs.nix-zsh-completions
+			];
+			plugins = [
+				"git"
+				"npm"
 			];
 		};
 	};
+};
 
 
-
-# Configure keymap in X11
-	services.xserver = {
-		xkb.layout = "us";
-		xkb.variant = "";
-	};
-
-# Enable CUPS to print documents.
-	services.printing.enable = false;
-
-# Enable sound with pipewire.
-	hardware.pulseaudio.enable = false;
-	security.rtkit.enable = true;
-	services.pipewire = {
-		enable = true;
-		alsa.enable = true;
-		alsa.support32Bit = true;
-		pulse.enable = true;
-# If you want to use JACK applications, uncomment this
-#jack.enable = true;
-
-# use the example session manager (no others are packaged yet so this is enabled by default,
-# no need to redefine it in your config for now)
-#media-session.enable = true;
-	};
-
-# Enable touchpad support (enabled default in most desktopManager).
-# services.xserver.libinput.enable = true;
+# Set neovim as default editor
+programs.neovim = {
+	enable = true;
+	defaultEditor = true;
+	vimAlias = true;
+};
 
 # Define a user account. Don't forget to set a password with ‘passwd’.
-	users.users.barac = {
-		isNormalUser = true;
-		description = "Barac Fabregat";
-		extraGroups = [ "networkmanager" "wheel" "adbusers" ];
-	};
+users.users.barac = {
+	isNormalUser = true;
+	description = "Barac Fabregat";
+	extraGroups = [ "networkmanager" "wheel" ];
+	packages = with pkgs; [
+#  thunderbird
+	];
+};
 
 # Install firefox.
-	programs.firefox.enable = true;
+programs.firefox.enable = true;
 
 # Allow unfree packages
-	nixpkgs.config.allowUnfree = true;
-
-# Enable VMware
-virtualisation.virtualbox.host.enable = true;
-virtualisation.virtualbox.host.enableExtensionPack = true;
-users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
+nixpkgs.config.allowUnfree = true;
 
 # List packages installed in system profile. To search, run:
 # $ nix search wget
-	environment.systemPackages = with pkgs; [
-		neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-			wget
-			mpv
-			yazi
-			git
-			github-cli
-			nodejs
-			kitty
-			alacritty
-			htop
-			neofetch
-			pavucontrol
-			zip
-			unzip
-			zig
-			libgcc
-			rustc
-			gnumake
-			vscode
-			insomnia
-			spectacle
-			krita
-			floorp
-			spotify
-	];
+environment.systemPackages = with pkgs; [
+	wget
+	yazi
+	foot
+	github-cli
+	git
+	fuzzel
+	htop
+	tidal-hifi
+	neofetch
+	nodejs
+	gcc
+	unzip
+	zip
+	zig
+	slurp
+	grim
+	wl-clipboard
+	ani-cli
+	mpv
+	tofi
+	cargo
+	rustc
+	pavucontrol
+	nb
+	w3m
+	lua-language-server
+	marksman
+];
 
-	networking.firewall.enable = true;
-	networking.firewall.allowedTCPPorts = [ 80 443 57621 ];
-	networking.firewall.allowedUDPPorts = [ 5353 ];
+# Lamp Stack
+networking.firewall.enable = true;
+networking.firewall.allowedTCPPorts = [ 80 443 5721 ];
+networking.firewall.allowedUDPPorts = [ 5353 ];
 
-	services.httpd.enable = true;
-	services.httpd.package = pkgs.apacheHttpd;
+services.httpd.enable = true;
+services.httpd.package = pkgs.apacheHttpd;
 
-	services.httpd.enablePHP = true; # oof... not a great idea in my opinion
-	services.httpd.phpPackage = pkgs.php;
-	
-	services.mysql.enable = true;
-	services.mysql.package = pkgs.mariadb;
+services.httpd.enablePHP = true;
+services.httpd.phpPackage = pkgs.php;
 
-	services.httpd.virtualHosts."duliarodse.com" = {
-		documentRoot = "/var/www/duliarodse.com";
-	};
+services.mysql = {
+  enable = true;
+  package = pkgs.mariadb;
+};
 
+services.httpd.virtualHosts."duliarodse.com" = {
+	documentRoot = "/var/www/duliarodse.com";
+};
 
-	systemd.tmpfiles.rules = [
-		"d /var/www/duliarodse.com"
-		"f /var/www/duliarodse.com/index.php - - - - <?php phpinfo();"
-	];
+systemd.tmpfiles.rules = [
+	"d /var/www/duliarodse.com"
+	"f /var/www/duliarodse.com/index.php - - - - <?php phpinfo();"
+];
+
 
 # Some programs need SUID wrappers, can be configured further or are
 # started in user sessions.
@@ -212,6 +182,7 @@ users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 # networking.firewall.allowedTCPPorts = [ ... ];
 # networking.firewall.allowedUDPPorts = [ ... ];
 # Or disable the firewall altogether.
+# networking.firewall.enable = false;
 
 # This value determines the NixOS release from which the default
 # settings for stateful data, like file locations and database versions
@@ -219,6 +190,6 @@ users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 # this value at the release version of the first install of this system.
 # Before changing this value read the documentation for this option
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-	system.stateVersion = "24.05"; # Did you read the comment?
+system.stateVersion = "24.05"; # Did you read the comment?
 
 }
