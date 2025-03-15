@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
 	# Home Manager needs a bit of information about you and the paths it should
@@ -22,6 +22,7 @@
 	programs.fish = {
 		interactiveShellInit = ''
 			set fish_greeting
+			zoxide init fish | source
 		'';
 
 		shellAliases = {
@@ -54,20 +55,43 @@
 			vscode-langservers-extracted
 			pyright
 			zls
+			jdt-language-server
+			stylua
+			svelte-language-server
 		];
 	};
 
-	# Tmux
-	programs.tmux = {
+	programs.helix = {
 		enable = true;
-		shell = "${pkgs.fish}/bin/fish";
-		terminal = "tmux-256color";
-		historyLimit = 100000;
-		prefix = "C-f";
-		plugins  = with pkgs; [
-			tmuxPlugins.vim-tmux-navigator
-			tmuxPlugins.sensible
+		extraPackages = with pkgs; [
+			nixd
+			taplo
+			typescript-language-server
+			svelte-language-server
+			zls
+			emmet-ls
+			vscode-langservers-extracted
+			superhtml
 		];
+	};
+
+		# Tmux
+	programs.tmux = {
+      enable = true;
+      shell = "${pkgs.fish}/bin/fish";
+      terminal = "tmux-256color";
+      historyLimit = 100000;
+      prefix = "C-f";
+      plugins = with pkgs; [
+        tmuxPlugins.vim-tmux-navigator
+        tmuxPlugins.sensible
+	    inputs.tmux-sessionx.packages.x86_64-linux.default
+      ];
+      extraConfig = ''
+        set -g @sessionx-bind "o"
+        set -g @sessionx-zoxide-mode "on"
+		set -g @sessionx-custom-paths '/home/barac/work,/home/barac/personal'
+	  '';
 	};
 
 	# Packages
@@ -75,9 +99,11 @@
 		obsidian
 		yazi
 		chromium
+		firefox
 		thunderbird
 		tidal-hifi
 		nodejs_22
+		bun
 		pavucontrol
 		htop
 		fastfetch
@@ -89,26 +115,57 @@
 		zig
 		gcc
 		httpie
+		httpie-desktop
 		jq
 		grim
 		slurp
 		discord
-		zathura
-		pcmanfm
+		nautilus
 		nitrogen
 		picom
 		xclip
 		mpv
 		unrar
+		lutris
+		go
+		mongosh
+		alacritty
+		gimp
+		spotify
+		pass
+		gnupg
+		pinentry
+		zathura
+		turso-cli
+		sqld
+		sql-studio
+		tree
+		zip
+		unzip
+		kitty
+		zed-editor
+		libreoffice
+		fzf
+		zoxide
 
 		# Fonts
 		noto-fonts
 		source-han-sans-japanese
 		source-han-serif-japanese
 		nerd-fonts.iosevka
+		corefonts
+		vistafonts
 
-		# Minecraft 	
-		badlion-client
+		# Minecraft
+		lunar-client
+
+		# Anime
+		ani-cli
+
+		# Wine
+		wine
+		bottles
+		winetricks
 	];
 
 	# Home Manager is pretty good at managing dotfiles. The primary way to manage

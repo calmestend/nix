@@ -2,7 +2,7 @@
   description = "Home Manager configuration of barac";
 
   inputs = {
-    # Specify the source of Home Manager and Nixpkgs.
+    tmux-sessionx.url = "github:omerxx/tmux-sessionx";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -10,20 +10,15 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
     in {
-      homeConfigurations."barac" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.barac = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
+        extraSpecialArgs = { inputs = self.inputs; };
         modules = [ ./home.nix ];
-
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
       };
     };
 }
