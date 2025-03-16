@@ -3,12 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-	ghostty = {
-		url = "github:ghostty-org/ghostty";
-	};
   };
 
-  outputs = { self, nixpkgs, ghostty, ... }:
+  outputs = { self, nixpkgs, ... }:
   let
     system = "x86_64-linux";
 
@@ -30,9 +27,6 @@
 
        modules = [
 	     ./nixos/configuration.nix
-		 { 
-		   environment.systemPackages = [ ghostty.packages.x86_64-linux.default ];
-		 }
        ];
      };
   };

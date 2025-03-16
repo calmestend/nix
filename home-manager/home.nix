@@ -13,7 +13,7 @@
 	# You should not change this value, even if you update Home Manager. If you do
 	# want to update the value, then make sure to first check the Home Manager
 	# release notes.
-	home.stateVersion = "24.11"; # Please read the comment before changing.
+	home.stateVersion = "25.05"; # Please read the comment before changing.
 
 	# Allow unfree
 	nixpkgs.config.allowUnfree = true;
@@ -75,7 +75,7 @@
 		];
 	};
 
-		# Tmux
+	# Tmux
 	programs.tmux = {
       enable = true;
       shell = "${pkgs.fish}/bin/fish";
@@ -99,8 +99,6 @@
 		obsidian
 		yazi
 		chromium
-		firefox
-		thunderbird
 		tidal-hifi
 		nodejs_22
 		bun
@@ -111,7 +109,6 @@
 		gh
 		xfce.xfce4-screenshooter
 		wl-clipboard
-		krita
 		zig
 		gcc
 		httpie
@@ -120,7 +117,6 @@
 		grim
 		slurp
 		discord
-		nautilus
 		nitrogen
 		picom
 		xclip
@@ -129,9 +125,7 @@
 		lutris
 		go
 		mongosh
-		alacritty
 		gimp
-		spotify
 		pass
 		gnupg
 		pinentry
@@ -142,11 +136,12 @@
 		tree
 		zip
 		unzip
-		kitty
+		ghostty
 		zed-editor
 		libreoffice
 		fzf
 		zoxide
+		surf
 
 		# Fonts
 		noto-fonts

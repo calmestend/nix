@@ -30,8 +30,9 @@
 	# Enable opengl
 	hardware.graphics.enable = true;
 	hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
-	hardware.nvidia.open = false;
+	hardware.nvidia.open = true;
 	services.xserver.videoDrivers = ["nvidia"];
+	hardware.opengl.enable = true;
 
 	# Enable x11
 	services.xserver.enable = true;
@@ -74,9 +75,6 @@
 		variant = "";
 	};
 
-	# Enable Sway 
-	programs.sway.enable = true;
-
 	# Enable lydm
 	services.displayManager.ly.enable = true;
 
@@ -92,12 +90,20 @@
 		};
 	};
 
-	# Enable i3
+	 
+	# Sway
+	programs.sway.enable = true;
+
+	# Xorg
 	services.xserver = {
 		desktopManager = {
 			xterm.enable = false;
 		};
 
+		# Qtile
+		windowManager.qtile.enable = true; #
+
+		# i3
 		windowManager.i3 = {
 			enable = true;
 			extraPackages = with pkgs; [
@@ -105,34 +111,44 @@
 				i3status 
 				i3lock 
 				i3blocks 
+				lemonbar
+				bc
 			];
 		};
 	};
 
+
 	# Enable shell
 	programs.fish.enable = true;
 
-	# Define a user account. Don't forget to set a password with ‘passwd’.
+	# Enable docker
+	virtualisation.docker.enable = true;
+
+	# User configuration
 	users.users.barac = {
 		isNormalUser = true;
 		description = "Barac Fabregat";
-		extraGroups = [ "networkmanager" "wheel" "audio" ];
+		extraGroups = [ "networkmanager" "wheel" "audio" "adbusers" "kvm" "plugdev" "docker"];
 		shell = pkgs.fish;
-		packages = with pkgs; [];
 	};
+
+	services.udev = {
+		extraRules = ''
+	SUBSYSTEM=="usb", ATTR{idVendor}=="04dd", ATTR{idProduct}=="9a12", MODE="0666", GROUP="plugdev"
+		'';
+	};
+
 
 	# Allow unfree packages
 	nixpkgs.config.allowUnfree = true;
 
-	# List packages installed in system profile. To search, run:
-	# $ nix search wget
+	# List packages installed in system profile.
 	environment.systemPackages = with pkgs; [
-		home-manager
 		vim
 	];
 
 	networking.firewall.enable = true;
-	networking.firewall.allowedTCPPorts = [ 80 443 5000 ];
+	networking.firewall.allowedTCPPorts = [ 80 443 5000 27017 3000 ];
 
 	system.stateVersion = "24.11"; # Did you read the comment?
 }
