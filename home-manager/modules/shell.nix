@@ -10,6 +10,7 @@
 			alias v="nvim"
 			alias y="yazi"
 			alias l="lazygit"
+			alias cd="z"
 
 			set -g fish_cursor_default block
 			set -g fish_cursor_insert line

@@ -13,6 +13,11 @@
 				tmuxPlugins.rose-pine
       ];
       extraConfig = ''
+				# Keep the current directory
+				bind '"' split-window -v -c "#{pane_current_path}"
+				bind % split-window -h -c "#{pane_current_path}"
+				bind c new-window -c "#{pane_current_path}"
+
         set -g @sessionx-bind "o"
         set -g @sessionx-zoxide-mode "on"
 				set -g @sessionx-custom-paths '/home/barac/work,/home/barac/personal'

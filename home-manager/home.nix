@@ -11,7 +11,7 @@
   home.username = "calmestend";
   home.homeDirectory = "/home/calmestend/";
 
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -66,6 +66,10 @@
 		ani-cli
 		zathura
 		bottles
+		go
+		zapzap
+		httpie
+		httpie-desktop
 	];
 
   # Let Home Manager install and manage itself.
