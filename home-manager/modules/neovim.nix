@@ -5,6 +5,7 @@
 		defaultEditor = true;
 		plugins = with pkgs.vimPlugins; [
 			blink-cmp
+			kulala-nvim
 		];
 		extraPackages = with pkgs; [
 			luajitPackages.lua-lsp
@@ -18,8 +19,9 @@
 				svelte-language-server
 				tinymist
 				gopls
-				nixd
+				nil
 				kdePackages.qtdeclarative
+				kulala-fmt
 		];
 	};
 }

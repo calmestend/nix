@@ -27,6 +27,15 @@
     openDefaultPorts = true; 
   };
 
+  # Enable podman
+  virtualisation = {
+    containers.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
+};
 
   # Set your time zone.
   time.timeZone = "America/Mexico_City";
@@ -80,7 +89,7 @@
   users.users.calmestend = {
     isNormalUser = true;
     description = "calmestend";
-    extraGroups = [ "networkmanager" "wheel" "audio"];
+    extraGroups = [ "networkmanager" "wheel" "audio" "podman" ];
     packages = with pkgs; [];
     shell = pkgs.fish;
   };
@@ -101,7 +110,7 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall
-  networking.firewall.allowedTCPPorts = [ 8080 8081 3000 22000 22067 ];
+  networking.firewall.allowedTCPPorts = [ 8384 ];
 
   system.stateVersion = "25.11"; 
 }

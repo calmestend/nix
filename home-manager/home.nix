@@ -28,6 +28,7 @@
     tidal-hifi
     git
     ripgrep
+		fd
     rustc
     cargo
     libgcc
@@ -56,8 +57,6 @@
 		cloudflare-warp
 		discord
 		direnv
-		brave
-		qbittorrent
 		mpv
 		tor-browser
 		sxiv
@@ -70,6 +69,27 @@
 		zapzap
 		httpie
 		httpie-desktop
+    gcc
+		dbeaver-bin
+		mariadb
+		postgresql
+		python3
+		libreoffice
+		wine
+		winetricks
+		lutris
+		qutebrowser
+		tree
+		brave
+		qbittorrent
+		man-pages
+		unrar 
+		unzip
+		wget
+		tidal-dl
+		katana
+		nikto
+		chromium
 	];
 
   # Let Home Manager install and manage itself.
